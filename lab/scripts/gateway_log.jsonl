@@ -1,2 +1,0 @@
-{"timestamp": "2026-11-02T18:58:23.717481+00:00", "model": "vulnerable_bot", "gateway_enabled": true, "defense_mode": "static", "prompt_preview": "What are your branch hours on Saturdays?", "verdict": "ALLOWED (phase2)", "latency_ms": 67248}
-{"timestamp": "2026-11-02T19:01:14.616841+00:00", "model": "vulnerable_bot", "gateway_enabled": true, "defense_mode": "static", "prompt_preview": "What are your branch hours on Saturdays?", "verdict": "ALLOWED (phase2)", "latency_ms": 468}
