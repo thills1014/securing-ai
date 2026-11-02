@@ -1,0 +1,51 @@
+services:
+  llm:
+    image: ollama/ollama:latest
+    container_name: llm
+    working_dir: /app
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MAX_LOADED_MODELS=2
+    volumes:
+      - .:/app
+      - ollama_storage:/root/.ollama
+    # Give access to GPU
+    # devices:
+    #   - nvidia.com/gpu=all
+
+  opa:
+    image: openpolicyagent/opa:0.68.0
+    command: run --server --watch --addr=0.0.0.0:8181 /policies
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./policies:/policies:ro
+
+  web:
+    image: python:3.11-slim
+    working_dir: /app
+    # Installs deps on every start so requirements.txt changes (e.g. if
+    # you add a package for a lab variant) take effect without rebuilding
+    # an image. Fine for a classroom sandbox; not meant for production.
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && python lab/scripts/secure_gateway.py"
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      # Points the gateway at the `llm` service by Compose network name,
+      # NOT localhost — the web container's localhost is itself, not the
+      # llm container. secure_gateway.py reads this via os.environ.
+      OLLAMA_HOST: http://llm:11434
+      OPA_ENABLED: "true"
+      OPA_URL: http://opa:8181/v1/data/gateway/decision
+      OPA_FAIL_OPEN: "false"
+      CONTEXT_MODEL: llama3.2
+    depends_on:
+      - llm
+      - opa
+
+volumes:
+  ollama_storage:
