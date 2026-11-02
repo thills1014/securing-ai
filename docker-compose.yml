@@ -1,6 +1,6 @@
 services:
   llm:
-    image: ollama/ollama:latest
+    image: docker.io/ollama/ollama:latest
     container_name: llm
     working_dir: /app
     ports:
@@ -16,7 +16,7 @@ services:
     #   - nvidia.com/gpu=all
 
   opa:
-    image: openpolicyagent/opa:0.68.0
+    image: docker.io/openpolicyagent/opa:0.68.0
     command: run --server --watch --addr=0.0.0.0:8181 /policies
     ports:
       - "8181:8181"
@@ -24,7 +24,7 @@ services:
       - ./policies:/policies:ro
 
   web:
-    image: python:3.11-slim
+    image: docker.io/python:3.11-slim
     working_dir: /app
     # Installs deps on every start so requirements.txt changes (e.g. if
     # you add a package for a lab variant) take effect without rebuilding
