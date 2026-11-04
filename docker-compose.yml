@@ -12,8 +12,8 @@ services:
       - .:/app
       - ollama_storage:/root/.ollama
     # Give access to GPU
-    devices:
-      - nvidia.com/gpu=all
+    #devices:
+    #  - nvidia.com/gpu=all
 
   opa:
     image: docker.io/openpolicyagent/opa:0.68.0
